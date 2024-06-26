@@ -4,14 +4,6 @@
 
 void	handle_signal(int signal)
 {
-	/*if (sig == SIGUSR1)
-	{
-		write (1, "Received SIGUSR1\n", 17);
-	}
-	else if (sig == SIGUSR2)
-	{
-		write (1, "Received SIGUSR2", 17);
-	}*/
 	static char c = 0;
 	static int bit_count = 0;
 
@@ -39,7 +31,6 @@ int main (void)
 	sigaction(SIGUSR2, &sa, NULL);
 
 	printf("Server PID: %d\n", getpid());
-
 	while (1)
 	{
 		pause();
