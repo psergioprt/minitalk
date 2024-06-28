@@ -6,13 +6,11 @@
 /*   By: pauldos- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 15:31:39 by pauldos-          #+#    #+#             */
-/*   Updated: 2024/06/27 15:31:43 by pauldos-         ###   ########.fr       */
+/*   Updated: 2024/06/28 10:42:58 by pauldos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <signal.h>
-#include <stdio.h>
-#include <unistd.h>
+#include "minitalk.h"
 
 void	handle_signal(int signal)
 {

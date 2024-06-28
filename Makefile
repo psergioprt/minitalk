@@ -13,11 +13,19 @@ LIBFT = $(LIBFTDIR)/libft.a
 
 # .SILENT:
 
+#SERVER_SRC = $(wildcard $(SRCDIR)/server.c)
+#CLIENT_SRC = $(wildcard $(SRCDIR)/client.c)
+
 SERVER_SRC = $(wildcard $(SRCDIR)/server/*.c)
 CLIENT_SRC = $(wildcard $(SRCDIR)/client/*.c)
 
+#SERVER_OBJS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SERVER_SRC))
+#CLIENT_OBJS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(CLIENT_SRC))
+
+
 SERVER_OBJS = $(patsubst $(SRCDIR)/server/%.c, $(OBJDIR)/server/%.o, $(SERVER_SRC))
 CLIENT_OBJS = $(patsubst $(SRCDIR)/client/%.c, $(OBJDIR)/client/%.o, $(CLIENT_SRC))
+
 
 all: $(SERVER_NAME) $(CLIENT_NAME)
 
@@ -29,6 +37,7 @@ $(CLIENT_NAME): $(CLIENT_OBJS) $(LIBFT)
 
 
 $(OBJDIR)/server/%.o: $(SRCDIR)/server/%.c $(wildcard $(INCDIR)/*.h)
+	@echo "creating obj directory if not exists..."
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
@@ -49,5 +58,5 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all bonus libft clean fclean re
+.PHONY: all libft clean fclean re
 deploy:
