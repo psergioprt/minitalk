@@ -1,4 +1,3 @@
-# Variable definition
 CC = cc
 CFLAGS = -g -Wall -Wextra -Werror -I$(INCDIR) -Iutil_funcs/Libft
 
@@ -8,47 +7,47 @@ SRCDIR = src
 OBJDIR = obj
 INCDIR = include
 LIBFTDIR = util_funcs/Libft
-LDFLAGS = -L$(LIBFTDIR) -lft
 
-.SILENT:
+# LDFLAGS = -L$(LIBFTDIR)
+LIBFT = $(LIBFTDIR)/libft.a
+
+# .SILENT:
 
 SERVER_SRC = $(wildcard $(SRCDIR)/server/*.c)
 CLIENT_SRC = $(wildcard $(SRCDIR)/client/*.c)
 
-
+SERVER_OBJS = $(patsubst $(SRCDIR)/server/%.c, $(OBJDIR)/server/%.o, $(SERVER_SRC))
+CLIENT_OBJS = $(patsubst $(SRCDIR)/client/%.c, $(OBJDIR)/client/%.o, $(CLIENT_SRC))
 
 all: $(SERVER_NAME) $(CLIENT_NAME)
-OBJDIR = obj
 
-LIBFT = $(LIBFTDIR)/libft.a
+$(SERVER_NAME): $(SERVER_OBJS) $(LIBFT)
+	$(CC) $(CFLAGS) -o $@ $^ $(LIBFT)
 
-
-SRC = $(wildcard $(SRCDIR)/*.c)
-
-OBJS = $(patsubst $(SRCDIR)/*.c, $(OBJDIR)/%.o, $(SRC))
+$(CLIENT_NAME): $(CLIENT_OBJS) $(LIBFT)
+	$(CC) $(CFLAGS) -o $@ $^ $(LIBFT)
 
 
-server: server.o libft
-	$(CC) -o $@ $< -Llibft -lft
+$(OBJDIR)/server/%.o: $(SRCDIR)/server/%.c $(wildcard $(INCDIR)/*.h)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
 
-client: client.o libft
-	$(CC) -o $@ $< -Llibft -lft
+$(OBJDIR)/client/%.o: $(SRCDIR)/client/%.c $(wildcard $(INCDIR)/*.h)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
 
-all: server client
-
-%.o: %.c
-	$(CC) -c $(CFLAGS) $?
-
-libft:
-	make -C libft
+$(LIBFT):
+	$(MAKE) -C $(LIBFTDIR)
 
 clean:
-	rm -f $(OBJECTS)
-	make -C libft clean
+	$(RM) -r $(OBJDIR)
+	$(MAKE) -C $(LIBFTDIR) clean
 
 fclean: clean
-	rm -f server client libft/libft.a
+	$(RM) -f $(SERVER_NAME) $(CLIENT_NAME)
+	$(MAKE) -C $(LIBFTDIR) fclean
 
 re: fclean all
 
 .PHONY: all bonus libft clean fclean re
+deploy:

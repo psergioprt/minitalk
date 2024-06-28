@@ -27,7 +27,7 @@ $(NAME): $(OBJ)
 	$(AR) $(ARFLAGS) $@ $(OBJ)
 
 $(OBJDIR)/%.o: %.c
-	@echo "$(COLOUR_BLUE)=>Compiling Push_swap...$(COLOUR_RESET)"
+#	@echo "$(COLOUR_BLUE)=>Compiling Libft functions...$(COLOUR_RESET)"
 	@mkdir -p $(OBJDIR)
 	$(CC) $(CFLAGS) -o$@ -c $<
 clean:
