@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -g -Wall -Wextra -Werror -I$(INCDIR) -Iutil_funcs/Libft
+CFLAGS = -g -Wall -Wextra -Werror -I$(INCDIR) -Iutil_funcs/Libft -Iutil_funcs/ft_printf
 
 SERVER_NAME = server
 CLIENT_NAME = client
@@ -7,54 +7,45 @@ SRCDIR = src
 OBJDIR = obj
 INCDIR = include
 LIBFTDIR = util_funcs/Libft
+FT_PRINTF_DIR = util_funcs/ft_printf
 
-# LDFLAGS = -L$(LIBFTDIR)
 LIBFT = $(LIBFTDIR)/libft.a
+FT_PRINTF = $(FT_PRINTF_DIR)/libftprintf.a
 
 # .SILENT:
 
-#SERVER_SRC = $(wildcard $(SRCDIR)/server.c)
-#CLIENT_SRC = $(wildcard $(SRCDIR)/client.c)
+SERVER_SRC = $(wildcard $(SRCDIR)/server*.c)
+CLIENT_SRC = $(wildcard $(SRCDIR)/client*.c)
 
-SERVER_SRC = $(wildcard $(SRCDIR)/server/*.c)
-CLIENT_SRC = $(wildcard $(SRCDIR)/client/*.c)
-
-#SERVER_OBJS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SERVER_SRC))
-#CLIENT_OBJS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(CLIENT_SRC))
-
-
-SERVER_OBJS = $(patsubst $(SRCDIR)/server/%.c, $(OBJDIR)/server/%.o, $(SERVER_SRC))
-CLIENT_OBJS = $(patsubst $(SRCDIR)/client/%.c, $(OBJDIR)/client/%.o, $(CLIENT_SRC))
-
+SERVER_OBJS = $(patsubst $(SRCDIR)/%.c, %.o, $(SERVER_SRC))
+CLIENT_OBJS = $(patsubst $(SRCDIR)/%.c, %.o, $(CLIENT_SRC))
 
 all: $(SERVER_NAME) $(CLIENT_NAME)
 
-$(SERVER_NAME): $(SERVER_OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) -o $@ $^ $(LIBFT)
+$(SERVER_NAME): $(SERVER_OBJS) $(LIBFT) $(FT_PRINTF)
+	$(CC) $(CFLAGS) -o $@ $^ $(LIBFT) $(FT_PRINTF)
 
-$(CLIENT_NAME): $(CLIENT_OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) -o $@ $^ $(LIBFT)
+$(CLIENT_NAME): $(CLIENT_OBJS) $(LIBFT) $(FT_PRINTF)
+	$(CC) $(CFLAGS) -o $@ $^ $(LIBFT) $(FT_PRINTF)
 
-
-$(OBJDIR)/server/%.o: $(SRCDIR)/server/%.c $(wildcard $(INCDIR)/*.h)
-	@echo "creating obj directory if not exists..."
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(OBJDIR)/client/%.o: $(SRCDIR)/client/%.c $(wildcard $(INCDIR)/*.h)
-	@mkdir -p $(dir $@)
+%.o: $(SRCDIR)/%.c $(wildcard $(INCDIR)/*.h)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFTDIR)
 
+$(FT_PRINTF):
+	$(MAKE) -C $(FT_PRINTF_DIR)
+
 clean:
-	$(RM) -r $(OBJDIR)
+	$(RM) -f *.o
 	$(MAKE) -C $(LIBFTDIR) clean
+	$(MAKE) -C $(FT_PRINTF_DIR) clean
 
 fclean: clean
 	$(RM) -f $(SERVER_NAME) $(CLIENT_NAME)
 	$(MAKE) -C $(LIBFTDIR) fclean
+	$(MAKE) -C $(FT_PRINTF_DIR) fclean
 
 re: fclean all
 
