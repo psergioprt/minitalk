@@ -19,27 +19,7 @@ starting at the location pointed to by s, by writing zeros
 
 #include "libft.h"
 
-static void    *ft_memset2(void *str, int c, size_t n)
-{
-	size_t                  i;
-	unsigned char   *s;
-
- 	i = 0;
-	s = str;
-	while (i < n)
-	{
-		s[i] = c;
-		i++;
-	}
-	return (s);
-}
-void    ft_bzero(void *s, size_t n)
-{
-	ft_memset2(s, '\0', n);
-} 
-// I am replacing my below ft_bzero, by another which invokes ft_memset,
-//because it might be any issue
-/*void	ft_bzero(void *s, size_t n)
+void	ft_bzero(void *s, size_t n)
 {
 	unsigned char	*ptr;
 
@@ -50,7 +30,7 @@ void    ft_bzero(void *s, size_t n)
 		ptr++;
 		n--;
 	}
-}*/
+}
 /*
 #include <strings.h>
 

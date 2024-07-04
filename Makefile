@@ -16,16 +16,18 @@ FT_PRINTF = $(FT_PRINTF_DIR)/libftprintf.a
 
 SERVER_SRC = $(wildcard $(SRCDIR)/server*.c)
 CLIENT_SRC = $(wildcard $(SRCDIR)/client*.c)
+ERRORS_FUNC_SRC = $(wildcard $(SRCDIR)/errors_output_funcs.c)
 
 SERVER_OBJS = $(patsubst $(SRCDIR)/%.c, %.o, $(SERVER_SRC))
 CLIENT_OBJS = $(patsubst $(SRCDIR)/%.c, %.o, $(CLIENT_SRC))
+ERRORS_FUNC_OBJS = $(patsubst $(SRCDIR)/%.c, %.o, $(ERRORS_FUNC_SRC))
 
 all: $(SERVER_NAME) $(CLIENT_NAME)
 
-$(SERVER_NAME): $(SERVER_OBJS) $(LIBFT) $(FT_PRINTF)
+$(SERVER_NAME): $(SERVER_OBJS) $(LIBFT) $(FT_PRINTF) $(ERRORS_FUNC_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LIBFT) $(FT_PRINTF)
 
-$(CLIENT_NAME): $(CLIENT_OBJS) $(LIBFT) $(FT_PRINTF)
+$(CLIENT_NAME): $(CLIENT_OBJS) $(LIBFT) $(FT_PRINTF) $(ERRORS_FUNC_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LIBFT) $(FT_PRINTF)
 
 %.o: $(SRCDIR)/%.c $(wildcard $(INCDIR)/*.h)

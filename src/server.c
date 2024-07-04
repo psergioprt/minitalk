@@ -14,13 +14,14 @@
 
 static int	g_size = 0;
 
-char	*print_message(char *message)
+char	*print_message(char *message, pid_t client_pid)
 {
 	if (!message)
 		return (NULL);
 	ft_printf("INCOMING MESSAGE FROM CLIENT: \n%s\n", message);
 	free(message);
 	g_size = 0;
+	kill(client_pid, SIGUSR1);
 	return (NULL);
 }
 
@@ -50,19 +51,20 @@ void	msg_len_deal(int sig)
 	if (count_bits == 32)
 	{
 		g_size = len;
-		ft_printf("Message has %d characters, excluding terminator\n", g_size - 1);
+		ft_printf("Message has %d characters\n", g_size - 1);
 		len = 0;
 		count_bits = 0;
 	}
 }
 
-void	message_text_deal(int signal)
+void	message_text_deal(int signal, siginfo_t *info, void *context)
 {
 	static char	*message = NULL;
 	static char	c;
 	static int	i;
 	static int	j;
 
+	(void)context;
 	if (signal == SIGUSR1)
 		c = (c << 1) | 1;
 	else
@@ -80,7 +82,7 @@ void	message_text_deal(int signal)
 	if (j == g_size)
 	{
 		j = 0;
-		message = print_message(message);
+		message = print_message(message, info->si_pid);
 	}
 }
 
@@ -92,9 +94,8 @@ int	main(void)
 	sa_size.sa_handler = msg_len_deal;
 	sigemptyset(&sa_size.sa_mask);
 	sa_size.sa_flags = SA_NOCLDWAIT;
-	sa_message.sa_handler = message_text_deal;
-	sigemptyset(&sa_message.sa_mask);
-	sa_message.sa_flags = SA_NOCLDWAIT;
+	sa_message.sa_sigaction = message_text_deal;
+	sa_message.sa_flags = SA_SIGINFO;
 	ft_printf("Please enter the following PID in client: %d\n", getpid());
 	while (1)
 	{

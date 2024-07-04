@@ -12,30 +12,7 @@
 
 #include "../include/minitalk.h"
 
-void	ft_perror_x(const char *s, const char *error_msg, int exit_code)
-{
-	if (s && *s)
-	{
-		write(STDERR_FILENO, s, ft_strlen(s));
-		write(2, ": ", 2);
-	}
-	if (error_msg && *error_msg)
-		write(2, error_msg, ft_strlen(error_msg));
-	write(2, "\n", 1);
-	exit(exit_code);
-}
-
-void	output_error_usage(const char *program_name)
-{
-	const char	*msg1 = "Usage: ";
-	const char	*msg2 = " <PID> <message>\n";
-
-	write(2, msg1, ft_strlen(msg1));
-	write(2, program_name, ft_strlen(program_name));
-	write(2, msg2, ft_strlen(msg2));
-}
-
-void	send_32bit_len_string(size_t pid, size_t len)
+static void	send_32bit_len_string(size_t pid, size_t len)
 {
 	int	i;
 
@@ -57,7 +34,7 @@ void	send_32bit_len_string(size_t pid, size_t len)
 	}
 }
 
-void	send_message(pid_t pid, const char *message, size_t len)
+static void	send_message(pid_t pid, const char *message, size_t len)
 {
 	size_t	i;
 	int		bit;
@@ -85,11 +62,18 @@ void	send_message(pid_t pid, const char *message, size_t len)
 	}
 }
 
+static	void	message_send_confirmation(int sig)
+{
+	if (sig == SIGUSR1)
+		write (1, "MESSAGE HAS BEEN SUCCESSFULLY SENT\n", 35);
+}
+
 int	main(int argc, char *argv[])
 {
-	pid_t		pid;
-	const char	*message;
-	size_t		len;
+	pid_t				pid;
+	const char			*message;
+	size_t				len;
+	struct sigaction	sa_message;
 
 	if (argc != 3)
 	{
@@ -100,6 +84,10 @@ int	main(int argc, char *argv[])
 	if (pid <= 0)
 		ft_perror_x("ft_atoi", "Invalid PID", EXIT_FAILURE);
 	message = argv[2];
+	sa_message.sa_handler = message_send_confirmation;
+	sigemptyset(&sa_message.sa_mask);
+	if (sigaction(SIGUSR1, &sa_message, NULL) == -1)
+		ft_perror_x("sigaction", "Failed to set up signal handler", 1);
 	len = ft_strlen(message) + 1;
 	send_32bit_len_string(pid, len);
 	send_message(pid, message, len);
