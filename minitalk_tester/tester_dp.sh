@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Set the PID of the server
-SERVER_PID=6825
+SERVER_PID=$1
 # Number of times to run the command
-TIMES=10
+TIMES=1
 
 # Base message
 BASE_MESSAGE="$c3b!c3a$!!ba$c2b1!bb12a$1cb!!%!%1ca3!%a2%bacba$32%aabc$2$%!c233223%!b%a%2ba%a%3$!3ba31!b113%b!aa!cab113%b!aa!ca"
@@ -76,7 +76,7 @@ START_TIME=$(date +%s.%N)
 for (( i=1; i<=TIMES; i++ ))
 do
     # Generate the message by repeating 'a' i times
-    MESSAGE="[ $i ] ${BASE_MESSAGE} "
+    MESSAGE="[ $i ] ${VIOLATOR_MESSAGE} "
 
     # Execute the client command with the incrementing message
     ./client $SERVER_PID "$MESSAGE"
