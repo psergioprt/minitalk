@@ -6,7 +6,7 @@
 /*   By: pauldos- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 15:31:39 by pauldos-          #+#    #+#             */
-/*   Updated: 2024/07/04 10:23:13 by pauldos-         ###   ########.fr       */
+/*   Updated: 2024/07/05 18:02:11 by pauldos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	msg_len_deal(int sig)
 	if (count_bits == 32)
 	{
 		g_size = len;
-		ft_printf("Message has %d characters\n", g_size - 1);
+		ft_printf("The message has %d characters\n", g_size - 1);
 		len = 0;
 		count_bits = 0;
 	}
@@ -91,9 +91,11 @@ int	main(void)
 	struct sigaction	sa_size;
 	struct sigaction	sa_message;
 
+	ft_memset(&sa_size, 0, sizeof(sa_size));
 	sa_size.sa_handler = msg_len_deal;
 	sigemptyset(&sa_size.sa_mask);
 	sa_size.sa_flags = SA_NOCLDWAIT;
+	ft_memset(&sa_message, 0, sizeof(sa_size));
 	sa_message.sa_sigaction = message_text_deal;
 	sa_message.sa_flags = SA_SIGINFO;
 	ft_printf("Please enter the following PID in client: %d\n", getpid());
