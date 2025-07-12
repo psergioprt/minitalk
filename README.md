@@ -19,7 +19,7 @@ It consists of a client and a server program that exchange messages by sending a
 
 Compile with the provided Makefile:
 
-```bash
+bash
 make
 
 ## ▶️ Usage
