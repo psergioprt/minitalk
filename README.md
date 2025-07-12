@@ -35,9 +35,9 @@ Then, run the client, passing the server PID and a message string:
 ./client <server_pid> "Your message here"
 
 The client sends the message to the server via signals, which then prints the received text.
-📌 Learning Outcomes
+## 📌 Learning Outcomes
 
-Understanding UNIX signal handling in C.
+    Understanding UNIX signal handling in C.
 
     Implementing communication protocols without standard IPC mechanisms.
 
